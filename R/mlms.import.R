@@ -209,12 +209,12 @@
          win.title=paste("Open Multiport File"), file=file)
     if(is.null(f)) return()
     
-    con <- file(f$path, "r")
+    con <- file(f, "r")
     
     dat <- NULL
-    if(tolower(f$ext) == "mps") dat <- readMps(con)
-    if(tolower(f$ext) == "sen") dat <- readSen(con)
-    if(tolower(f$ext) == "dat") dat <- readDat(con)
+    if(tolower(attr(f, "extension")) == "mps") dat <- readMps(con)
+    if(tolower(attr(f, "extension")) == "sen") dat <- readSen(con)
+    if(tolower(attr(f, "extension")) == "dat") dat <- readDat(con)
     
     close(con)
     

@@ -27,7 +27,7 @@
     if(missing(outfile)) {
         f <- GetFile(cmd="Save As", exts="txt", win.title="Save MLMS Data As", defaultextension="txt")
         if(is.null(f)) stop(call.=FALSE, "no output file")
-        outfile <- f$path
+        outfile <- f
     }
     
     dat <- NULL
