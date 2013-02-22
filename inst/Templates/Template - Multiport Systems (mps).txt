@@ -1,0 +1,38 @@
+# Multiport Systems (*.mps) - Template
+#
+# STATION.C12     character   station name (C12)
+# SITEID.C1       integer     site identification number (C1)
+# FORMATDATE      character   date format (e.g. %Y-%m-%d)
+# UNITLEN         character   length unit (e.g. ft)
+# UNITPRESS       character   pressure unit (e.g. psi)
+# DATUM.C36       character   datum associated with LAT.C9 and LONG.C10 (C36)
+# LAT.C9          numeric     latitude (C9)
+# LONG.C10        numeric     longitude (C10)
+# DATUM.C22       character   datum associated with BCALT.C16 (C22)
+# BCALT.C16       numeric     brass cap (BC) altitude (C16)
+# ACC.C18         numeric     accuracy of BCALT.C16 measurement
+# STICKUP         numeric     distance from BC to top of MP 55 casing
+# BOREDEPTH.C27   numeric     borehole depth measured from BC (C27)
+# COMDEPTH.C28    numeric     completion depth measured from BC (C28)
+# INSTDATE.C60    date        installation date (C60)
+# DRILLCOMP.C21   date        drilling completion date (C21)
+# NZONE           integer     number of intervals defined by packers
+# ZONE            data frame  interval description
+# ZONE[,ZONEID]   integer     interval index number
+# ZONE[,TOP]      numeric     depth to top of monitoring zone
+# ZONE[,BOT]      numeric     depth to bottom of monitoring zone
+# NPORT           integer     number of sampling ports
+# PORT            data frame  port information
+# PORT[,PORTID]   integer     port index number
+# PORT[,POS]      numeric     pressure transducer position measured as depth below land surface
+# PORT[,ID]       integer     site number associated with port
+#
+STATION.C12	SITEID.C1
+FORMATDATE	UNITLEN	UNITPRESS
+DATUM.C36	LAT.C9	LONG.C10
+DATUM.C22	BCALT.C16	ACC.C18
+STICKUP	BOREDEPTH.C27	COMDEPTH.C28	INSTDATE.C60	DRILLCOMP.C21
+NZONE
+ZONEID	TOP	BOT # repeat NZONE times
+NPORT
+PORTID	POS	ID # repeat NPORT times

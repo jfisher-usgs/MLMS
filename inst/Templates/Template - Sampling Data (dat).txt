@@ -1,0 +1,38 @@
+# Sampling Data Template (*.dat)
+#
+# STATION.C12    character   station name (C12)
+# FORMATDT       character   date/time format (e.g. %Y-%m-%d %H:%M)
+# UNITLEN        character   length unit (e.g. ft)
+# UNITPRESS      character   pressure unit (e.g. psi)
+# UNITTEMP       character   temperature unit (e.g. degC)
+# STIME          character   start date/time for sampling
+# ETIME          character   end date/time for sampling
+# OPERATORS      character   field operators
+# COMMENT        character   general comment
+# BAROID         character   barometric pressure sensor identification
+# BAROSTART      numeric     barometric pressure before sampling
+# BAROEND        numeric     barometric pressure after sampling
+# PRESID         character   probe pressure sensor identification
+# PRESSTART      numeric     pressure before sampling
+# PRESEND        numeric     pressure after sampling
+# TEMPID         character   probe temperature sensor identification
+# TEMPSTART      numeric     temperature before sampling
+# TEMPEND        numeric     temperature after sampling
+# NPS            integer     number of port samples
+# PORT           data frame  port measurements
+# PORT[,PORTID]  integer     port index number
+# PORT[,BARO]    numeric     barometric pressure at land surface (psia)
+# PORT[,PRESS]   numeric     fluid pressure measured by transducer outside MP casing (psia)
+# PORT[,TEMP]    numeric     probe temperature
+# PORT[,TIME]    character   sample time
+# PORT[,COMMENT] character   comment regarding sample
+#
+STATION.C12
+FORMATDT	UNITLEN	UNITPRESS	UNITTEMP
+STIME	ETIME
+OPERATORS	COMMENT
+BAROID	BAROSTART	BAROEND
+PRESID	PRESSTART	PRESEND
+TEMPID	TEMPSTART	TEMPEND
+NPS
+PORTID	BARO	PRESS	TEMP	TIME	COMMENT # repeat NPS times

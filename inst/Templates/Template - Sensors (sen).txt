@@ -1,0 +1,41 @@
+# Sensor Information (*.sen) - Template
+#
+# SENSOR               character   sensor identification
+# SERIAL               integer     serial number
+# BRAND                character   brand name
+# MODEL                character   model
+# FORMATDATE           character   date format (e.g. %Y-%m-%d)
+# UNITPRESS            character   pressure unit (e.g. psi)
+# UNITTEMP             character   temperature unit (e.g. degC)
+# TYPE                 character   type
+# TEMPLOWER            numeric     lower range of operating temperature
+# TEMPUPPER            numeric     upper range of operating temperature
+# PRESLOWER            numeric     lower range of operating pressure
+# PRESUPPER            numeric     upper range of operating pressure
+# RESPTIME             character   response time
+# PRESRES              numeric     pressure resolution
+# PRESACC              numeric     pressure accuracy +/-
+# REPEATACC            numeric     pressure repeatability +/-
+# HYSTERACC            numeric     pressure hysteresis +/-
+# NC                   integer     number of calibrations completed
+# CAL                  list        calibration measurements
+# CAL[]$CALDATE        character   calibration date
+# CAL[]$PREPOST        character   use 'pre' for pre-calibration and 'post' for post-calibration
+# CAL[]$REFTEMP        numeric     reference temperature during calibration
+# CAL[]$TSDATE         character   date of traceable standard
+# CAL[]$LABSTAND       character   lab standard
+# CAL[]$NR             integer     number of calibration records
+# CAL[]$DAT            data frame  calibration records
+# CAL[]$DAT[,TPRES]    numeric     true pressure reading
+# CAL[]$DAT[,ERROR]    numeric     measurement error +/-
+#
+SENSOR	SERIAL	BRAND	MODEL
+FORMATDATE	UNITPRESS	UNITTEMP
+TYPE
+TEMPLOWER	TEMPUPPER	PRESLOWER	PRESUPPER
+PRESRES	PRESACC	REPEATACC	HYSTERACC
+RESPTIME
+NC # repeat the remaining lines NC times
+CALDATE	PREPOST	REFTEMP	TSDATE	LABSTAND 
+NR
+TPRES	ERROR # repeat NR times

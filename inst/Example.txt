@@ -1,0 +1,189 @@
+## Plotting instructions for multilevel sampling
+## Wells: USGS103, USGS132, USGS133, USGS134, MIDDLE2050A, MIDDLE2051
+
+library(RSurvey)         # load required R packages
+RestoreSession()         # select R source directory
+d <- mlms.process() # select directory containing multilevel sampling data
+
+###
+# Account for calibration error in pressure probe
+mlms.calibration(d, prodate="2007-08-15", pres=120, temp=13, showPlots=TRUE)
+
+###
+
+# Vertical profile of total pressure head at well USGS 103.
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 103")
+
+# Vertical profile of fluid pressure at well USGS 103.
+mlms.plotProfile(d, xvar="PRESS", id="USGS 103")
+
+# Vertical profile of zero-mean normalized total pressure head at well USGS 103.
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 103", normalize=TRUE)
+
+# Vertical profile of total pressure head at well USGS 134, correlation output.
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 134", corr=TRUE)
+
+# Interval plot of total pressure head at well USGS 103.
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 103", zone=TRUE)
+
+# Vertical profile of total pressure head at well USGS 103.
+# Limits placed on x- and y-axis
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 132", xlim=c(4421,4422), ylim=c(3900, 4300))
+
+# Vertical profile of total pressure head at well USGS 132.
+# A linear regression table summarizing two vertical segments defined by 
+# altitudes 3800, 4150, and 4500 ft.
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 132", brklns=c(3800, 4150, 4500))
+
+# Vertical profile of temperature at well USGS 132.
+# Only data with start times of Jul-07 and Apr-08 are plotted.
+mlms.plotProfile(d, xvar="TEMP", id="USGS 132", stimes=c("2007-07-30", "2008-04-16"))
+
+###
+
+# Paired port compairson of total pressure head at well USGS 103.
+mlms.plotPairedPort(d, yvar="TOTHEADDIFF", id="USGS 103")
+
+# Paired port compairson of total pressure head at well USGS 103.
+# Only data with a start time of 2008-08-18 is plotted.
+mlms.plotPairedPort(d, yvar="TOTHEADDIFF", id="USGS 103", stimes="2008-08-18")
+
+# Paired port compairson of total pressure head at well USGS 103 with y-axes limit specified.
+mlms.plotPairedPort(d, yvar="TOTHEADDIFF", id="USGS 103", ylim=c(-0.2, 1))
+
+# Paired port compairson of temperature at well USGS 134 with distribution statistics.
+mlms.plotPairedPort(d, yvar="TEMPDIFF", id="USGS 134", showStats=TRUE)
+
+### NOT WORKING (MAY BE DUE TO MISSING DEVIATION DATA)...
+
+# Error in EMS3552 fluid pressure sensor, error given in feet.
+mlms.plotSensorError(d, sensor="EMS3552", yvar="ERRORHEAD")
+
+# Error in DPI740 barometric pressure sensor, error given in feet.
+mlms.plotSensorError(d, sensor="DPI740", yvar="ERRORHEAD")
+
+# Error in EMS3552 sensor, error given in psi, conducted on Oct. 20, 2007.
+mlms.plotSensorError(d, sensor="EMS3552", yvar="ERROR", CALDATE="2007-10-20")
+
+### ...
+
+# Output data for all wells prior to March 31, 2009
+mlms.export(d, etime="2009-03-31")
+
+# Output data for all wells post April 1, 2009
+mlms.export(d, stime="2009-04-01")
+
+# Output all data for the USGS 134 and MIDDLE 2051 wells and place it in C:\tmp.txt
+mlms.export(d, ids=c("USGS 134", "MIDDLE 2051"), outfile="C:/tmp.txt")
+
+mlms.export(d, ids=c("USGS 134"))
+
+###
+
+events <- c("USGS103_200806161345", "USGS132_200806160810", "USGS133_200806131410", "USGS134_200806130948", 
+            "MIDDLE2050A_200806171704", "MIDDLE2051_200806170825")
+for(i in events) {
+    dat <- d$dat[[i]]$SAMPLE[,c("TOTHEAD", "TEMP")]
+    print(paste(i, ": ", format(cor(dat, method="pearson", use="complete.obs")[1,2]), sep=""))
+}
+
+
+
+tbl <- NULL
+for(i in events) {
+    dat <- d$dat[[i]]$SAMPLE[,c("ZONE", "TOTHEAD", "TEMP")]
+    for(j in unique(dat$ZONE)) {
+        logic <- dat$ZONE == j
+        tbl <- rbind(tbl, c(i, j, mean(dat$TOTHEAD[logic], na.rm=TRUE), mean(dat$TEMP[logic], na.rm=TRUE)))
+    }
+}
+tbl <- as.data.frame(tbl)
+write.table(tbl, file="D:/WORK/JFisher/Projects/MLMS 2007-2008/tmp.dat", append=FALSE, quote=FALSE, row.names=FALSE, col.names=FALSE, sep="\t")
+
+
+
+
+mlms.plotProfile(d, xvar="TEMP", id="USGS 133", brklns=c(4100,4500)) # 0.0039999430
+mlms.plotProfile(d, xvar="TEMP", id="USGS 134", brklns=c(4000,4500)) # 0.006339441
+mlms.plotProfile(d, xvar="TEMP", id="MIDDLE 2050A", brklns=c(3500,4500)) # 0.006549432
+mlms.plotProfile(d, xvar="TEMP", id="MIDDLE 2051", brklns=c(3800,4500)) # 0.007900642
+
+
+d$dat[["USGS103_200710010825"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS103_200712030850"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS103_200804030910"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS103_200806161345"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS103_200808180846"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS103_200812030906"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")] 
+
+d$dat[["USGS132_200703280915"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200707300940"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200709170845"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200712031105"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200804161100"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200806160810"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200808120900"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS132_200812031200"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+
+d$dat[["USGS133_200709240813"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS133_200712040830"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS133_200804040945"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS133_200806131410"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS133_200808271245"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS133_200812021123"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+
+d$dat[["USGS134_200703281340"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200707311043"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200709100823"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200712041220"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200804161303"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200806130948"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200809030810"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["USGS134_200812020904"    ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+
+d$dat[["MIDDLE2050A_200703271448"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200707301438"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200709190834"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200712040930"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200804031320"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200806171704"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200808251330"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2050A_200812021228"]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+
+d$dat[["MIDDLE2051_200703260900" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200707301145" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200709110800" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200712031235" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200804031130" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200806170825" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200808201304" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+d$dat[["MIDDLE2051_200812031412" ]]$SAMPLE[,c("PORTID", "BARO", "TEMP", "PRESS", "TOTHEAD")]
+
+###
+
+d$dat[["USGS133_200708160947"]]$SAMPLE[,c("PORTID", "TOTHEAD")]
+d$dat[["USGS133_200708171425"]]$SAMPLE[,c("PORTID", "TOTHEAD")]
+
+###
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 103", zone=TRUE, stimes=c("2008-06-16"), xlim=c(4419.6, 4419.9))
+mlms.plotProfile(d, xvar="TEMP", id="USGS 103", zone=TRUE, stimes=c("2008-06-16"), xlim=c(12.3, 13.2))
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 132", zone=TRUE, stimes=c("2008-06-16"), xlim=c(4419.3, 4419.8))
+mlms.plotProfile(d, xvar="TEMP", id="USGS 132", zone=TRUE, stimes=c("2008-06-16"), xlim=c(10.3, 12.6))
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 133", zone=TRUE, stimes=c("2008-06-13"), xlim=c(4456.5, 4464.0))
+mlms.plotProfile(d, xvar="TEMP", id="USGS 133", zone=TRUE, stimes=c("2008-06-13"), xlim=c(10.9, 12.4))
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="USGS 134", zone=TRUE, stimes=c("2008-06-13"), xlim=c(4453.4, 4454.5))
+mlms.plotProfile(d, xvar="TEMP", id="USGS 134", zone=TRUE, stimes=c("2008-06-13"), xlim=c(12.7, 15.0))
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="MIDDLE 2050A", zone=TRUE, stimes=c("2008-06-17"), xlim=c(4445.4, 4446.6))
+mlms.plotProfile(d, xvar="TEMP", id="MIDDLE 2050A", zone=TRUE, stimes=c("2008-06-17"), xlim=c(10.5, 16.5))
+
+mlms.plotProfile(d, xvar="TOTHEAD", id="MIDDLE 2051", zone=TRUE, stimes=c("2008-06-17"), xlim=c(4426, 4434))
+mlms.plotProfile(d, xvar="TEMP", id="MIDDLE 2051", zone=TRUE, stimes=c("2008-06-17"), xlim=c(10.0, 15.5))
+
+
+
+
