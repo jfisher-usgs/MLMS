@@ -1,9 +1,9 @@
 ## Plotting instructions for multilevel sampling
 ## Wells: USGS103, USGS132, USGS133, USGS134, MIDDLE2050A, MIDDLE2051
 
-library(RSurvey)         # load required R packages
-RestoreSession()         # select R source directory
-d <- mlms.process() # select directory containing multilevel sampling data
+library(tcltk)             # load required R packages
+RSurvey::RestoreSession()  # select R source directory
+d <- mlms.process()        # select directory containing multilevel sampling data
 
 ###
 # Account for calibration error in pressure probe

@@ -205,7 +205,7 @@
     
   # read file
     
-    f <- GetFile(cmd="Open", initialdir=Data("default.dir"), 
+    f <- RSurvey::GetFile(cmd="Open", initialdir=RSurvey::Data("default.dir"), 
          win.title=paste("Open Multiport File"), file=file)
     if(is.null(f)) return()
     

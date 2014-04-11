@@ -32,7 +32,7 @@
     
   # read files
     
-    path <- tclvalue(tkchooseDirectory(initialdir=Data("default.dir"), 
+    path <- tclvalue(tkchooseDirectory(initialdir=RSurvey::Data("default.dir"), 
             title="Choose Multilevel Monitoring Data Directory..."))
     
     mps.files <- list.files(path, full.names=TRUE, recursive=TRUE, pattern="[.][m][p][s]$")
